@@ -19,7 +19,9 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build"
   },
   "eslintConfig": {
     "extends": [
@@ -41,9 +43,11 @@
   },
   "devDependencies": {
     "autoprefixer": "^10.4.20",
+    "gh-pages": "^6.3.0",
     "postcss": "^8.5.1",
     "tailwindcss": "^3.4.17",
     "webpack": "^5.97.1",
     "webpack-cli": "^6.0.1"
-  }
+  },
+  "homepage": "https://khadija123-hub.github.io/portfolio"
 }
