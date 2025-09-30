@@ -163,17 +163,7 @@ const FloatingIcons = () => {
 const About = () => {
   const [isVisible, setIsVisible] = useState(false);
   
-  const skills = [
-    { name: 'JavaScript', color: 'from-yellow-400 to-yellow-600' },
-    { name: 'Tailwind CSS', color: 'from-cyan-400 to-cyan-600' },
-    { name: 'PHP', color: 'from-purple-400 to-purple-600' },
-    { name: 'React', color: 'from-blue-400 to-blue-600' },
-    { name: 'Node.js', color: 'from-green-400 to-green-600' },
-    { name: 'Express', color: 'from-gray-400 to-gray-600' },
-    { name: 'MongoDB', color: 'from-green-500 to-green-700' },
-    { name: 'MYSQL', color: 'from-orange-400 to-orange-600' },
-    { name: 'Docker', color: 'from-blue-500 to-blue-700' }
-  ];
+ 
 
   useEffect(() => {
     setIsVisible(true);
@@ -261,32 +251,7 @@ const About = () => {
             </div>
           </div>
 
-          {/* Skills Section */}
-          <motion.div
-            className="backdrop-blur-md bg-white/10 rounded-3xl shadow-2xl border border-white/20 p-8 md:p-12 mb-12"
-            initial={{ opacity: 0, y: 50 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.7 }}
-          >
-            <h2 className="text-3xl font-bold text-center text-white mb-8">
-              Mes <span className="bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent">Compétences</span>
-            </h2>
-            
-            <div className="flex flex-wrap gap-4 justify-center">
-              {skills.map((skill, index) => (
-                <motion.span
-                  key={skill.name}
-                  className={`px-6 py-3 bg-gradient-to-r ${skill.color} rounded-full text-white font-semibold shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 backdrop-blur-sm border border-white/20`}
-                  initial={{ opacity: 0, scale: 0.8 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  transition={{ duration: 0.5, delay: 0.9 + index * 0.1 }}
-                  whileHover={{ y: -2 }}
-                >
-                  {skill.name}
-                </motion.span>
-              ))}
-            </div>
-          </motion.div>
+         
 
           {/* Social Links */}
           <motion.div

@@ -3,6 +3,7 @@ import { Github } from 'lucide-react';
 import Authentification from '../images/authentification.jpeg';
 import RecetteApp from '../images/proRecettes.jpg';
 import AutoVision from '../images/AutoVision.jpg';
+import CafeSite from '../images/CafeSite.jpg';
 
 const projects = [
   {
@@ -26,6 +27,13 @@ const projects = [
     technologies: ["PHP", "MySQLi", "HTML", "CSS", "Bootstrap"],
     link: "https://github.com/Khadija123-hub/AutoCollection-Manager.git"
   },
+  {
+    title: "Café Site Web",
+    description: "Un site web moderne pour un café avec présentation du menu, système de commande en ligne, galerie de photos et formulaire de contact. Interface élégante et responsive pour une expérience utilisateur optimale.",
+    image: CafeSite, // N'oublie pas d'importer l'image en haut : import CafeSite from './assets/cafe.jpg'
+    technologies: ["React.js", "Tailwind CSS", "Laravel", "Responsive Design"],
+    link: "https://github.com/Khadija123-hub/projet_fin_cafe" // Mets ton lien GitHub ici
+  }
 ];
 
 const FloatingParticles = () => {
