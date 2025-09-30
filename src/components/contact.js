@@ -286,25 +286,7 @@ function Contact() {
                         </div>
                     </div>
 
-                    {/* Map Section */}
-                    <div className="backdrop-blur-md bg-white/10 p-8 rounded-2xl shadow-2xl border border-white/20">
-                        <h2 className="text-2xl font-bold text-white mb-6 flex items-center gap-2">
-                            <MapPin className="text-purple-400" size={24} />
-                            Ma localisation
-                        </h2>
-                        
-                        <div className="rounded-xl overflow-hidden border border-white/20 shadow-2xl">
-                            <iframe
-                                title="Localisation"
-                                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d18394.408178834237!2d-7.578041622883153!3d33.53868804890426!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0xda63316b108b659%3A0x60b24f73eb53a9c0!2sSalmia%202%2C%20Casablanca!5e1!3m2!1sfr!2sma!4v1740438385790!5m2!1sfr!2sma"
-                                width="100%"
-                                height="400"
-                                className="border-0"
-                                allowFullScreen
-                                loading="lazy"
-                            ></iframe>
-                        </div>
-                    </div>
+                 
                 </div>
             </div>
         </div>
