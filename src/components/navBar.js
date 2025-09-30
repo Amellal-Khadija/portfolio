@@ -14,6 +14,10 @@ const NavBar = () => {
     { name: 'Contact', to: 'contact' }
   ];
 
+  // Couleur unifiée pour toute la navbar
+  const unifiedGradient = 'from-blue-500 via-purple-500 to-pink-500';
+  const activeGradient = 'from-blue-600 to-purple-600';
+
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 backdrop-blur-md bg-gray-900/80 border-b border-white/10 shadow-2xl">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -46,7 +50,7 @@ const NavBar = () => {
                   onSetActive={() => setActiveSection(item.to)}
                   className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-300 cursor-pointer transform hover:scale-105 ${
                     activeSection === item.to
-                      ? 'bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-lg'
+                      ? `bg-gradient-to-r ${activeGradient} text-white shadow-lg`
                       : 'text-gray-300 hover:text-white hover:bg-white/10'
                   }`}
                 >
@@ -86,7 +90,7 @@ const NavBar = () => {
                 onClick={() => setIsOpen(false)}
                 className={`block px-4 py-3 rounded-lg text-base font-medium transition-all duration-300 cursor-pointer ${
                   activeSection === item.to
-                    ? 'bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-lg'
+                    ? `bg-gradient-to-r ${activeGradient} text-white shadow-lg`
                     : 'text-gray-300 hover:text-white hover:bg-white/10'
                 }`}
               >

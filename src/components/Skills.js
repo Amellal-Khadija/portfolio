@@ -1,5 +1,5 @@
 import React, { useRef, useEffect, useState } from "react";
-import { motion } from "framer-motion";
+import { motion, useScroll, useTransform, useSpring } from "framer-motion";
 import {
   Code,
   Palette,
@@ -7,7 +7,14 @@ import {
   Database,
   GitBranch,
   Server,
-  Wrench
+  Wrench,
+  Sparkles,
+  Zap,
+  Mail,
+  Kanban,
+  Brain,
+  Rocket,
+  MessageCircle
 } from "lucide-react";
 
 import {
@@ -20,8 +27,12 @@ import {
   SiLaravel,
   SiMysql,
   SiMongodb,
-  SiGithub
+  SiGithub,
+  SiJira,
+  SiVercel
 } from "react-icons/si";
+
+import { FaRobot, FaMagic } from "react-icons/fa";
 
 const FloatingParticles = () => {
   const canvasRef = useRef(null);
@@ -42,20 +53,19 @@ const FloatingParticles = () => {
 
     const createParticles = () => {
       particlesRef.current = [];
-      for (let i = 0; i < 70; i++) {
+      for (let i = 0; i < 100; i++) {
         particlesRef.current.push({
           x: Math.random() * canvas.width,
           y: Math.random() * canvas.height,
           z: Math.random() * 1000,
-          vx: (Math.random() - 0.5) * 0.2,
-          vy: (Math.random() - 0.5) * 0.2,
-          vz: Math.random() * 1 + 0.3,
-          size: Math.random() * 1.2 + 0.5,
-          opacity: Math.random() * 0.4 + 0.2,
-          color: `hsl(${Math.random() * 60 + 200}, 70%, ${
-            Math.random() * 25 + 40
-          }%)`,
-          pulse: Math.random() * Math.PI * 2
+          vx: (Math.random() - 0.5) * 0.3,
+          vy: (Math.random() - 0.5) * 0.3,
+          vz: Math.random() * 1.5 + 0.5,
+          size: Math.random() * 1.5 + 0.8,
+          opacity: Math.random() * 0.5 + 0.3,
+          color: `hsl(${Math.random() * 60 + 200}, 80%, ${Math.random() * 30 + 50}%)`,
+          pulse: Math.random() * Math.PI * 2,
+          pulseSpeed: Math.random() * 0.02 + 0.01
         });
       }
     };
@@ -70,14 +80,14 @@ const FloatingParticles = () => {
     window.addEventListener("mousemove", handleMouseMove);
 
     const animate = () => {
-      ctx.fillStyle = "rgba(17, 24, 39, 0.05)";
+      ctx.fillStyle = "rgba(8, 15, 30, 0.08)";
       ctx.fillRect(0, 0, canvas.width, canvas.height);
 
       particlesRef.current.forEach((particle, index) => {
         particle.x += particle.vx;
         particle.y += particle.vy;
         particle.z -= particle.vz;
-        particle.pulse += 0.016;
+        particle.pulse += particle.pulseSpeed;
 
         const scale = 1000 / (1000 + particle.z);
         const x2d = particle.x * scale + canvas.width / 2;
@@ -87,43 +97,26 @@ const FloatingParticles = () => {
         const dy = mouseRef.current.y - y2d;
         const distance = Math.sqrt(dx * dx + dy * dy);
 
-        if (distance < 100) {
-          const force = (100 - distance) / 100;
-          particle.vx += dx * 0.000012 * force;
-          particle.vy += dy * 0.000012 * force;
+        if (distance < 150) {
+          const force = (150 - distance) / 150;
+          particle.vx += dx * 0.00002 * force;
+          particle.vy += dy * 0.00002 * force;
         }
 
         if (particle.z <= 0) {
           particle.z = 1000;
-          particle.x = (Math.random() - 0.5) * 1500;
-          particle.y = (Math.random() - 0.5) * 1500;
+          particle.x = (Math.random() - 0.5) * 1800;
+          particle.y = (Math.random() - 0.5) * 1800;
         }
 
-        const pulseSize = particle.size * (1 + Math.sin(particle.pulse) * 0.15);
+        const pulseSize = particle.size * (1 + Math.sin(particle.pulse) * 0.2);
 
         ctx.beginPath();
         ctx.arc(x2d, y2d, pulseSize * scale, 0, Math.PI * 2);
 
-        const gradient = ctx.createRadialGradient(
-          x2d,
-          y2d,
-          0,
-          x2d,
-          y2d,
-          pulseSize * scale * 1.5
-        );
-        gradient.addColorStop(
-          0,
-          particle.color
-            .replace(")", `, ${particle.opacity * scale})`)
-            .replace("hsl", "hsla")
-        );
-        gradient.addColorStop(
-          0.5,
-          particle.color
-            .replace(")", `, ${particle.opacity * scale * 0.3})`)
-            .replace("hsl", "hsla")
-        );
+        const gradient = ctx.createRadialGradient(x2d, y2d, 0, x2d, y2d, pulseSize * scale * 2);
+        gradient.addColorStop(0, particle.color.replace(")", `, ${particle.opacity * scale})`).replace("hsl", "hsla"));
+        gradient.addColorStop(0.4, particle.color.replace(")", `, ${particle.opacity * scale * 0.4})`).replace("hsl", "hsla"));
         gradient.addColorStop(1, "transparent");
 
         ctx.fillStyle = gradient;
@@ -133,19 +126,14 @@ const FloatingParticles = () => {
           const otherScale = 1000 / (1000 + otherParticle.z);
           const otherX2d = otherParticle.x * otherScale + canvas.width / 2;
           const otherY2d = otherParticle.y * otherScale + canvas.height / 2;
+          const distance = Math.sqrt((x2d - otherX2d) ** 2 + (y2d - otherY2d) ** 2);
 
-          const distance = Math.sqrt(
-            (x2d - otherX2d) ** 2 + (y2d - otherY2d) ** 2
-          );
-
-          if (distance < 70) {
+          if (distance < 90) {
             ctx.beginPath();
             ctx.moveTo(x2d, y2d);
             ctx.lineTo(otherX2d, otherY2d);
-            ctx.strokeStyle = `rgba(59, 130, 246, ${
-              0.25 * (1 - distance / 70)
-            })`;
-            ctx.lineWidth = 0.5;
+            ctx.strokeStyle = `rgba(59, 130, 246, ${0.3 * (1 - distance / 90) * scale * otherScale})`;
+            ctx.lineWidth = 0.8;
             ctx.stroke();
           }
         });
@@ -167,40 +155,9 @@ const FloatingParticles = () => {
       ref={canvasRef}
       className="fixed inset-0 pointer-events-none z-0"
       style={{
-        background:
-          "linear-gradient(135deg, #0f172a 0%, #1e293b 30%, #334155 70%, #475569 100%)"
+        background: "radial-gradient(ellipse at top, #0f1729 0%, #050a14 50%, #000000 100%)"
       }}
     />
-  );
-};
-
-const FloatingIcons = () => {
-  const icons = [
-    { Icon: Code, delay: 0, x: "8%", y: "15%" },
-    { Icon: Database, delay: 0.8, x: "92%", y: "25%" },
-    { Icon: Palette, delay: 1.6, x: "12%", y: "75%" },
-    { Icon: Server, delay: 2.4, x: "88%", y: "85%" },
-    { Icon: Globe, delay: 3.2, x: "18%", y: "50%" },
-    { Icon: GitBranch, delay: 4.0, x: "82%", y: "60%" }
-  ];
-
-  return (
-    <div className="absolute inset-0 overflow-hidden pointer-events-none">
-      {icons.map(({ Icon, delay, x, y }, index) => (
-        <div
-          key={index}
-          className="absolute animate-pulse opacity-4 hover:opacity-8 transition-opacity duration-1000"
-          style={{
-            left: x,
-            top: y,
-            animationDelay: `${delay}s`,
-            animationDuration: "6s"
-          }}
-        >
-          <Icon size={24} className="text-blue-300/20" />
-        </div>
-      ))}
-    </div>
   );
 };
 
@@ -208,21 +165,23 @@ const skillCategories = [
   {
     title: "Front-end",
     icon: Globe,
-    color: "from-blue-500 to-cyan-500",
+    gradient: "from-blue-500 via-cyan-500 to-teal-400",
+    bgGlow: "bg-blue-500/20",
     skills: [
-  { name: "HTML", icon: <SiHtml5 className="text-orange-500" />, color: "from-orange-400 to-red-500" },
-  { name: "CSS", icon: <SiCss3 className="text-blue-500" />, color: "from-blue-400 to-indigo-500" },
-  { name: "JavaScript", icon: <SiJavascript className="text-yellow-400" />, color: "from-yellow-400 to-orange-500" },
-  { name: "React.js", icon: <SiReact className="text-cyan-400" />, color: "from-cyan-400 to-blue-500" },
-  { name: "Next.js", icon: <SiReact className="text-black" />, color: "from-gray-700 to-gray-900" },
-  { name: "Vite", icon: <SiReact className="text-purple-400" />, color: "from-purple-400 to-yellow-400" },
-  { name: "Tailwind CSS", icon: <SiTailwindcss className="text-sky-400" />, color: "from-teal-400 to-cyan-500" }
+      { name: "HTML5", icon: <SiHtml5 className="text-orange-500" />, color: "from-orange-400 to-red-500" },
+      { name: "CSS3", icon: <SiCss3 className="text-blue-500" />, color: "from-blue-400 to-indigo-500" },
+      { name: "JavaScript", icon: <SiJavascript className="text-yellow-400" />, color: "from-yellow-400 to-orange-500" },
+      { name: "React.js", icon: <SiReact className="text-cyan-400" />, color: "from-cyan-400 to-blue-500" },
+      { name: "Next.js", icon: <SiReact className="text-white" />, color: "from-gray-700 to-gray-900" },
+      { name: "Vite", icon: <SiReact className="text-purple-400" />, color: "from-purple-400 to-yellow-400" },
+      { name: "Tailwind CSS", icon: <SiTailwindcss className="text-sky-400" />, color: "from-teal-400 to-cyan-500" }
     ]
   },
   {
     title: "Back-end",
     icon: Server,
-    color: "from-green-500 to-emerald-500",
+    gradient: "from-green-500 via-emerald-500 to-teal-400",
+    bgGlow: "bg-green-500/20",
     skills: [
       { name: "Node.js", icon: <SiNodedotjs className="text-green-500" />, color: "from-green-400 to-green-600" },
       { name: "Laravel", icon: <SiLaravel className="text-red-500" />, color: "from-red-400 to-orange-500" },
@@ -231,125 +190,216 @@ const skillCategories = [
     ]
   },
   {
-    title: "Outils",
-    icon: Wrench,
-    color: "from-purple-500 to-pink-500",
+    title: "IA & Productivité",
+    icon: Brain,
+    gradient: "from-purple-500 via-pink-500 to-rose-400",
+    bgGlow: "bg-purple-500/20",
     skills: [
-      { name: "Git & GitHub", icon: <SiGithub className="text-gray-200" />, color: "from-gray-400 to-gray-600" }
+      { name: "Cursor", icon: <MessageCircle className="text-green-400" />, color: "from-green-400 to-emerald-500" },
+      { name: "v0.dev", icon: <SiVercel className="text-white" />, color: "from-gray-700 to-black" },
+      { name: "GitHub Copilot", icon: <FaRobot className="text-blue-400" />, color: "from-blue-400 to-purple-500" },
+      { name: "VS Code + IA", icon: <Code className="text-blue-300" />, color: "from-blue-300 to-cyan-400" }
+    ]
+  },
+  {
+    title: "Prototypage & Communication",
+    icon: Rocket,
+    gradient: "from-orange-500 via-red-500 to-pink-400",
+    bgGlow: "bg-orange-500/20",
+    skills: [
+     
+      { name: "EmailJS", icon: <Mail className="text-yellow-400" />, color: "from-yellow-400 to-orange-500" },
+      { name: "Jira", icon: <SiJira className="text-blue-400" />, color: "from-blue-400 to-cyan-500" }
+    ]
+  },
+  {
+    title: "Outils & Versioning",
+    icon: Wrench,
+    gradient: "from-gray-500 via-gray-600 to-gray-700",
+    bgGlow: "bg-gray-500/20",
+    skills: [
+      { name: "Git & GitHub", icon: <SiGithub className="text-gray-200" />, color: "from-gray-400 to-gray-600" },
+     
+      { name: "Postman", icon: <SiReact className="text-orange-500" />, color: "from-orange-400 to-red-500" },
+     
     ]
   }
 ];
 
-const Skills = () => {
-  const [isVisible, setIsVisible] = useState(false);
-
-  useEffect(() => {
-    setIsVisible(true);
-  }, []);
+const SkillCard = ({ skill, index, catIndex }) => {
+  const [isHovered, setIsHovered] = useState(false);
 
   return (
-    <div className="relative min-h-screen overflow-hidden">
-      <FloatingParticles />
-      <FloatingIcons />
+    <motion.div
+      className="group relative"
+      initial={{ opacity: 0, scale: 0.8, y: 20 }}
+      whileInView={{ opacity: 1, scale: 1, y: 0 }}
+      viewport={{ once: true }}
+      transition={{
+        duration: 0.5,
+        delay: catIndex * 0.15 + index * 0.05,
+        ease: [0.25, 0.46, 0.45, 0.94]
+      }}
+      onHoverStart={() => setIsHovered(true)}
+      onHoverEnd={() => setIsHovered(false)}
+    >
+      {/* Glow Effect */}
+      <motion.div
+        className={`absolute -inset-1 bg-gradient-to-r ${skill.color} rounded-2xl blur-lg opacity-0 group-hover:opacity-60 transition-opacity duration-500`}
+        animate={isHovered ? { scale: [1, 1.05, 1] } : {}}
+        transition={{ duration: 2, repeat: Infinity }}
+      />
 
-      <div className="relative z-10 flex flex-col items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
-        <div className="w-full max-w-6xl">
-          {/* Header */}
+      {/* Card */}
+      <motion.div
+        className="relative backdrop-blur-xl bg-gradient-to-br from-white/10 to-white/5 rounded-2xl p-5 border border-white/20 hover:border-white/40 transition-all duration-500 overflow-hidden"
+        whileHover={{ y: -5, scale: 1.02 }}
+        transition={{ type: "spring", stiffness: 300, damping: 20 }}
+      >
+        {/* Shine Effect */}
+        <motion.div
+          className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent"
+          initial={{ x: "-100%" }}
+          animate={isHovered ? { x: "100%" } : {}}
+          transition={{ duration: 0.6 }}
+        />
+
+        <div className="relative flex flex-col items-center space-y-3">
+          {/* Icon Container */}
           <motion.div
-            className="text-center mb-12"
-            initial={{ opacity: 0, y: -30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
+            className="relative"
+            whileHover={{ rotate: [0, -10, 10, -10, 0] }}
+            transition={{ duration: 0.5 }}
           >
-            <h1 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-white via-blue-100 to-white bg-clip-text text-transparent mb-3">
-              🛠️ Mes Compétences
-            </h1>
-            <p className="text-lg text-gray-300 max-w-2xl mx-auto">
-              Technologies et outils que j'utilise pour créer des expériences web
-            </p>
-            <div className="w-24 h-1 bg-gradient-to-r from-blue-400 to-purple-500 mx-auto rounded-full mt-4"></div>
+            <div className={`absolute inset-0 bg-gradient-to-r ${skill.color} rounded-xl blur-md opacity-50`} />
+            <div className="relative text-4xl transform transition-transform duration-300 p-3 bg-white/10 rounded-xl backdrop-blur-sm">
+              {skill.icon}
+            </div>
           </motion.div>
 
-          {/* Skills */}
-          <div className="space-y-10">
+          {/* Name */}
+          <h3 className="text-sm font-semibold text-white/90 group-hover:text-white transition-colors duration-300 text-center">
+            {skill.name}
+          </h3>
+        </div>
+      </motion.div>
+    </motion.div>
+  );
+};
+
+const Skills = () => {
+  const containerRef = useRef(null);
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ["start end", "end start"]
+  });
+
+  const y = useTransform(scrollYProgress, [0, 1], [100, -100]);
+  const opacity = useTransform(scrollYProgress, [0, 0.2, 0.8, 1], [0, 1, 1, 0]);
+
+  return (
+    <div ref={containerRef} className="relative min-h-screen overflow-hidden">
+      <FloatingParticles />
+
+      <motion.div 
+        className="relative z-10 py-20 px-4 sm:px-6 lg:px-8"
+        style={{ opacity }}
+      >
+        <div className="max-w-7xl mx-auto">
+          {/* Header */}
+          <motion.div
+            className="text-center mb-16"
+            initial={{ opacity: 0, y: -50 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8, ease: "easeOut" }}
+          >
+            <motion.div
+              className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gradient-to-r from-blue-500/20 to-purple-500/20 border border-blue-400/30 backdrop-blur-sm mb-6"
+              initial={{ scale: 0 }}
+              whileInView={{ scale: 1 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.2, type: "spring", stiffness: 200 }}
+            >
+              <Sparkles className="w-4 h-4 text-blue-400" />
+              <span className="text-sm font-medium text-blue-300">Stack Technique Complète</span>
+            </motion.div>
+
+            <h1 className="text-5xl md:text-7xl font-black mb-6">
+              <span className="bg-gradient-to-r from-white via-blue-100 to-purple-200 bg-clip-text text-transparent">
+                Mes Compétences
+              </span>
+            </h1>
+            
+            <p className="text-lg md:text-xl text-gray-300 max-w-3xl mx-auto leading-relaxed">
+              Maîtrise des technologies modernes, outils IA et méthodologies pour créer des expériences web exceptionnelles
+            </p>
+
+            <motion.div 
+              className="w-32 h-1.5 bg-gradient-to-r from-blue-400 via-purple-500 to-pink-500 mx-auto rounded-full mt-8"
+              initial={{ width: 0 }}
+              whileInView={{ width: 128 }}
+              viewport={{ once: true }}
+              transition={{ duration: 1, delay: 0.5 }}
+            />
+          </motion.div>
+
+          {/* Skills Categories */}
+          <div className="space-y-12">
             {skillCategories.map((category, catIndex) => (
               <motion.div
                 key={catIndex}
-                className="backdrop-blur-md bg-white/6 rounded-2xl shadow-xl border border-white/10 p-6 md:p-8"
-                initial={{ opacity: 0, y: 30 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: catIndex * 0.2 }}
+                className="relative"
+                initial={{ opacity: 0, y: 50 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: "-100px" }}
+                transition={{ duration: 0.6, delay: catIndex * 0.15 }}
               >
-                {/* Category Header */}
-                <motion.div
-                  className="text-center mb-6"
-                  initial={{ opacity: 0, x: -30 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ duration: 0.5, delay: catIndex * 0.2 + 0.1 }}
-                >
-                  <div className="flex items-center justify-center gap-3 mb-3">
-                    <div className={`p-2 rounded-full bg-gradient-to-r ${category.color} shadow-md`}>
-                      <category.icon size={24} className="text-white" />
-                    </div>
-                    <h2
-                      className={`text-2xl md:text-3xl font-bold bg-gradient-to-r ${category.color} bg-clip-text text-transparent`}
+                {/* Category Background Glow */}
+                <div className={`absolute -inset-4 ${category.bgGlow} blur-3xl rounded-3xl opacity-20`} />
+
+                <div className="relative backdrop-blur-xl bg-gradient-to-br from-white/8 to-white/4 rounded-3xl p-8 md:p-10 border border-white/10 shadow-2xl">
+                  {/* Category Header */}
+                  <motion.div
+                    className="flex items-center justify-center gap-4 mb-10"
+                    initial={{ opacity: 0, x: -30 }}
+                    whileInView={{ opacity: 1, x: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.6, delay: catIndex * 0.15 + 0.2 }}
+                  >
+                    <motion.div
+                      className={`p-3 rounded-2xl bg-gradient-to-br ${category.gradient} shadow-lg relative`}
+                      whileHover={{ scale: 1.1, rotate: 5 }}
+                      transition={{ type: "spring", stiffness: 300 }}
                     >
+                      <div className="absolute inset-0 bg-white/20 rounded-2xl blur" />
+                      <category.icon className="w-7 h-7 text-white relative z-10" />
+                    </motion.div>
+                    
+                    <h2 className={`text-3xl md:text-4xl font-bold bg-gradient-to-r ${category.gradient} bg-clip-text text-transparent`}>
                       {category.title}
                     </h2>
+                  </motion.div>
+
+                  {/* Skills Grid */}
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                    {category.skills.map((skill, index) => (
+                      <SkillCard
+                        key={index}
+                        skill={skill}
+                        index={index}
+                        catIndex={catIndex}
+                      />
+                    ))}
                   </div>
-                </motion.div>
-
-                {/* Skills Grid */}
-                <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
-                  {category.skills.map((skill, index) => (
-                    <motion.div
-                      key={index}
-                      className="group relative overflow-hidden"
-                      initial={{ opacity: 0, scale: 0.8 }}
-                      animate={{ opacity: 1, scale: 1 }}
-                      transition={{
-                        duration: 0.5,
-                        delay: catIndex * 0.2 + index * 0.08 + 0.3
-                      }}
-                    >
-                      <div
-                        className={`absolute -inset-0.5 bg-gradient-to-r ${skill.color} rounded-xl blur opacity-20 group-hover:opacity-50 transition duration-700`}
-                      ></div>
-
-                      <div className="relative backdrop-blur-sm bg-white/8 rounded-xl p-4 border border-white/15 hover:border-white/30 transition-all duration-300 hover:scale-102 hover:shadow-lg">
-                        <div className="flex flex-col items-center text-center space-y-2">
-                          {/* Icon */}
-                          <div className="relative text-3xl transform group-hover:scale-105 transition-transform duration-300">
-                            {skill.icon}
-                          </div>
-
-                          {/* Name */}
-                          <h3 className="text-sm font-medium text-white group-hover:text-white transition-colors duration-300">
-                            {skill.name}
-                          </h3>
-
-                          {/* Progress Bar */}
-                          <div className="w-full bg-white/8 rounded-full h-1.5 overflow-hidden">
-                            <motion.div
-                              className={`h-full bg-gradient-to-r ${skill.color} rounded-full`}
-                              initial={{ width: 0 }}
-                              animate={{ width: "85%" }}
-                              transition={{
-                                duration: 1.2,
-                                delay: catIndex * 0.2 + index * 0.08 + 0.6
-                              }}
-                            />
-                          </div>
-                        </div>
-                      </div>
-                    </motion.div>
-                  ))}
                 </div>
               </motion.div>
             ))}
           </div>
+
+        
         </div>
-      </div>
+      </motion.div>
     </div>
   );
 };
