@@ -265,7 +265,7 @@ const About = () => {
             <div className="flex justify-center space-x-8">
               {[
                 { Icon: Github, href: 'https://github.com/Amellal-Khadija', color: 'hover:text-gray-300', bg: 'hover:bg-gray-500/20' },
-                { Icon: Linkedin, href: 'https://www.linkedin.com/in/khadija-amellal-a10064304/', color: 'hover:text-blue-400', bg: 'hover:bg-blue-500/20' },
+                { Icon: Linkedin, href: 'https://www.linkedin.com/in/khadija-amellal', color: 'hover:text-blue-400', bg: 'hover:bg-blue-500/20' },
                 { Icon: Mail, href: 'mailto:khadijaamellal51@gmail.com?subject=Contact depuis le portfolio', color: 'hover:text-green-400', bg: 'hover:bg-green-500/20' }
               ].map(({ Icon, href, color, bg }, index) => (
                 <motion.a
