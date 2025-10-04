@@ -1,8 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Github, ExternalLink, Code2, Sparkles, ArrowUpRight, X } from 'lucide-react';
-import { motion, AnimatePresence } from 'framer-motion';
 
-// Placeholder images - remplacez avec vos vraies images
+// Placeholder images
 const Authentification = 'https://images.unsplash.com/photo-1633356122544-f134324a6cee?w=800&h=600&fit=crop';
 const RecetteApp = 'https://images.unsplash.com/photo-1556910103-1c02745aae4d?w=800&h=600&fit=crop';
 const AutoVision = 'https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?w=800&h=600&fit=crop';
@@ -43,15 +42,16 @@ const projects = [
   }
 ];
 
-
-
 const FloatingParticles = () => {
   const canvasRef = useRef(null);
   const particlesRef = useRef([]);
   const mouseRef = useRef({ x: 0, y: 0 });
+  const animationRef = useRef(null);
 
   useEffect(() => {
     const canvas = canvasRef.current;
+    if (!canvas) return;
+    
     const ctx = canvas.getContext('2d');
     
     const resizeCanvas = () => {
@@ -61,6 +61,23 @@ const FloatingParticles = () => {
     
     resizeCanvas();
     window.addEventListener('resize', resizeCanvas);
+
+    // Initialiser les particules
+    particlesRef.current = [];
+    for (let i = 0; i < 80; i++) {
+      particlesRef.current.push({
+        x: (Math.random() - 0.5) * 1800,
+        y: (Math.random() - 0.5) * 1800,
+        z: Math.random() * 1000,
+        vx: (Math.random() - 0.5) * 0.3,
+        vy: (Math.random() - 0.5) * 0.3,
+        vz: Math.random() * 0.5 + 0.1,
+        size: Math.random() * 2 + 0.5,
+        pulse: Math.random() * Math.PI * 2,
+        color: `hsl(${Math.random() * 60 + 200}, 70%, 60%)`,
+        opacity: Math.random() * 0.5 + 0.3
+      });
+    }
 
     const handleMouseMove = (e) => {
       mouseRef.current.x = e.clientX;
@@ -129,7 +146,7 @@ const FloatingParticles = () => {
         });
       });
 
-      requestAnimationFrame(animate);
+      animationRef.current = requestAnimationFrame(animate);
     };
 
     animate();
@@ -137,6 +154,9 @@ const FloatingParticles = () => {
     return () => {
       window.removeEventListener('resize', resizeCanvas);
       window.removeEventListener('mousemove', handleMouseMove);
+      if (animationRef.current) {
+        cancelAnimationFrame(animationRef.current);
+      }
     };
   }, []);
 
@@ -153,76 +173,51 @@ const ProjectCard = ({ project, index, onClick }) => {
   const [isHovered, setIsHovered] = useState(false);
 
   return (
-    <motion.div
-      className="group cursor-pointer"
-      initial={{ opacity: 0, y: 50 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "-50px" }}
-      transition={{ duration: 0.6, delay: index * 0.1 }}
+    <div
+      className="group cursor-pointer transform transition-all duration-300 hover:-translate-y-2"
+      style={{
+        opacity: 0,
+        animation: `fadeInUp 0.6s ease-out ${index * 0.1}s forwards`
+      }}
       onClick={() => onClick(project)}
-      onHoverStart={() => setIsHovered(true)}
-      onHoverEnd={() => setIsHovered(false)}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
     >
-      {/* Glow Effect */}
-      <motion.div
-        className={`absolute -inset-1 bg-gradient-to-r rounded-2xl blur-xl opacity-0 group-hover:opacity-60 transition-opacity duration-500`}
-        animate={isHovered ? { scale: [1, 1.05, 1] } : {}}
-        transition={{ duration: 2, repeat: Infinity }}
-      />
-
       {/* Card */}
-      <motion.div
-        className="relative backdrop-blur-xl bg-gradient-to-br from-white/10 to-white/5 rounded-2xl overflow-hidden border border-white/10 hover:border-white/30 transition-all duration-500"
-        whileHover={{ y: -8, scale: 1.02 }}
-        transition={{ type: "spring", stiffness: 300, damping: 25 }}
-      >
+      <div className="relative backdrop-blur-xl bg-gradient-to-br from-white/10 to-white/5 rounded-2xl overflow-hidden border border-white/10 hover:border-white/30 transition-all duration-500 hover:shadow-2xl hover:shadow-blue-500/20">
+        
         {/* Image Container */}
         <div className="relative overflow-hidden h-56">
           {/* Category Badge */}
           <div className="absolute top-4 left-4 z-20">
-            <motion.div
-              className={`px-3 py-1 rounded-full bg-gradient-to-r  text-white text-xs font-semibold shadow-lg backdrop-blur-sm`}
-              initial={{ x: -20, opacity: 0 }}
-              whileInView={{ x: 0, opacity: 1 }}
-              viewport={{ once: true }}
-              transition={{ delay: index * 0.1 + 0.2 }}
-            >
+            <div className="px-3 py-1 rounded-full bg-slate-900/80 backdrop-blur-sm border border-slate-700 text-white text-xs font-semibold">
               {project.category}
-            </motion.div>
+            </div>
           </div>
 
           {/* Overlay */}
           <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-60 group-hover:opacity-40 transition-opacity duration-500 z-10" />
 
           {/* Image */}
-          <motion.img 
+          <img 
             src={project.image} 
             alt={project.title}
-            className="w-full h-full object-cover"
-            whileHover={{ scale: 1.1 }}
-            transition={{ duration: 0.6 }}
+            className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
           />
 
           {/* Hover Icon */}
-          <motion.div
-            className="absolute top-4 right-4 z-20"
-            initial={{ scale: 0, rotate: -180 }}
-            whileHover={{ scale: 1, rotate: 0 }}
-            transition={{ type: "spring", stiffness: 300 }}
-          >
+          <div className={`absolute top-4 right-4 z-20 transition-all duration-300 ${isHovered ? 'opacity-100 scale-100' : 'opacity-0 scale-50'}`}>
             <div className="w-10 h-10 bg-white/20 backdrop-blur-md rounded-full flex items-center justify-center border border-white/30">
               <ArrowUpRight className="w-5 h-5 text-white" />
             </div>
-          </motion.div>
+          </div>
         </div>
 
         {/* Content */}
         <div className="p-6">
-          <motion.h3 
-            className="text-2xl font-bold text-white mb-3 group-hover:bg-gradient-to-r group-hover:from-blue-400 group-hover:to-purple-400 group-hover:bg-clip-text group-hover:text-transparent transition-all duration-300"
-          >
+          <h3 className="text-2xl font-bold text-white mb-3 group-hover:text-blue-400 transition-colors duration-300">
             {project.title}
-          </motion.h3>
+          </h3>
 
           <p className="text-gray-300 text-sm leading-relaxed mb-4 line-clamp-2">
             {project.description}
@@ -231,16 +226,12 @@ const ProjectCard = ({ project, index, onClick }) => {
           {/* Technologies */}
           <div className="flex flex-wrap gap-2 mb-4">
             {project.technologies.slice(0, 3).map((tech, techIndex) => (
-              <motion.span
+              <span
                 key={techIndex}
                 className="px-3 py-1 text-xs rounded-full bg-white/5 border border-white/10 text-gray-300 backdrop-blur-sm"
-                initial={{ opacity: 0, scale: 0.8 }}
-                whileInView={{ opacity: 1, scale: 1 }}
-                viewport={{ once: true }}
-                transition={{ delay: index * 0.1 + techIndex * 0.05 + 0.3 }}
               >
                 {tech}
-              </motion.span>
+              </span>
             ))}
             {project.technologies.length > 3 && (
               <span className="px-3 py-1 text-xs rounded-full bg-white/5 border border-white/10 text-gray-400">
@@ -255,25 +246,13 @@ const ProjectCard = ({ project, index, onClick }) => {
               <Code2 className="w-3 h-3" />
               Voir les détails
             </span>
-            <motion.div
-              className={`w-8 h-8 rounded-full bg-gradient-to-r flex items-center justify-center shadow-lg`}
-              whileHover={{ scale: 1.1, rotate: 5 }}
-              transition={{ type: "spring", stiffness: 400 }}
-            >
+            <div className="w-8 h-8 rounded-full bg-slate-800 flex items-center justify-center border border-slate-700">
               <Github className="w-4 h-4 text-white" />
-            </motion.div>
+            </div>
           </div>
         </div>
-
-        {/* Shine Effect */}
-        <motion.div
-          className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent"
-          initial={{ x: "-100%" }}
-          animate={isHovered ? { x: "100%" } : {}}
-          transition={{ duration: 0.6 }}
-        />
-      </motion.div>
-    </motion.div>
+      </div>
+    </div>
   );
 };
 
@@ -285,70 +264,54 @@ const ProjectModal = ({ project, onClose }) => {
     };
   }, []);
 
+  if (!project) return null;
+
   return (
-    <motion.div
-      className="fixed inset-0 bg-black/80 backdrop-blur-md flex items-center justify-center z-50 p-4"
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
+    <div
+      className="fixed inset-0 bg-black/90 backdrop-blur-md flex items-center justify-center z-50 p-4"
+      style={{
+        animation: 'fadeIn 0.3s ease-out'
+      }}
       onClick={onClose}
     >
-      <motion.div
-        className="bg-gradient-to-br from-gray-900/95 to-black/95 backdrop-blur-xl rounded-3xl max-w-4xl w-full border border-white/20 shadow-2xl overflow-hidden"
-        initial={{ scale: 0.8, y: 50 }}
-        animate={{ scale: 1, y: 0 }}
-        exit={{ scale: 0.8, y: 50 }}
-        transition={{ type: "spring", stiffness: 300, damping: 30 }}
+      <div
+        className="bg-slate-900/98 backdrop-blur-xl rounded-3xl max-w-4xl w-full border border-slate-700/50 shadow-2xl overflow-hidden"
+        style={{
+          animation: 'scaleIn 0.3s ease-out'
+        }}
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header avec image */}
         <div className="relative h-72 overflow-hidden">
-          <div className={`absolute inset-0 bg-gradient-to-br  opacity-20`} />
           <img 
             src={project.image} 
             alt={project.title}
             className="w-full h-full object-cover"
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-gray-900 via-gray-900/50 to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/70 to-transparent" />
           
           {/* Close Button */}
-          <motion.button
+          <button
             onClick={onClose}
-            className="absolute top-6 right-6 w-10 h-10 bg-white/10 backdrop-blur-md rounded-full flex items-center justify-center border border-white/20 hover:bg-white/20 transition-colors"
-            whileHover={{ scale: 1.1, rotate: 90 }}
-            whileTap={{ scale: 0.9 }}
+            className="absolute top-6 right-6 w-10 h-10 bg-slate-800/80 backdrop-blur-md rounded-full flex items-center justify-center border border-slate-600/50 hover:bg-slate-700/80 hover:rotate-90 transition-all duration-300"
           >
             <X className="w-5 h-5 text-white" />
-          </motion.button>
+          </button>
 
           {/* Title Overlay */}
           <div className="absolute bottom-6 left-6 right-6">
-            <motion.div
-              className={`inline-block px-3 py-1 rounded-full bg-gradient-to-r  text-white text-sm font-semibold mb-3`}
-              initial={{ x: -20, opacity: 0 }}
-              animate={{ x: 0, opacity: 1 }}
-              transition={{ delay: 0.2 }}
-            >
+            <div className="inline-block px-3 py-1 rounded-full bg-slate-800/80 backdrop-blur-sm border border-slate-700 text-white text-sm font-semibold mb-3">
               {project.category}
-            </motion.div>
-            <motion.h2
-              className="text-4xl font-bold text-white"
-              initial={{ y: 20, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              transition={{ delay: 0.3 }}
-            >
+            </div>
+            <h2 className="text-4xl font-bold text-white">
               {project.title}
-            </motion.h2>
+            </h2>
           </div>
         </div>
 
         {/* Content */}
         <div className="p-8 max-h-[50vh] overflow-y-auto">
-          <motion.div
-            initial={{ y: 20, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            transition={{ delay: 0.4 }}
-          >
+          <div>
             <p className="text-gray-300 text-lg leading-relaxed mb-8">
               {project.description}
             </p>
@@ -361,53 +324,39 @@ const ProjectModal = ({ project, onClose }) => {
               </h3>
               <div className="flex flex-wrap gap-3">
                 {project.technologies.map((tech, index) => (
-                  <motion.span
+                  <span
                     key={index}
-                    className={`px-4 py-2 rounded-xl bg-gradient-to-r  bg-opacity-10 border border-white/20 text-white font-medium backdrop-blur-sm`}
-                    initial={{ opacity: 0, scale: 0.8 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    transition={{ delay: 0.5 + index * 0.05 }}
-                    whileHover={{ scale: 1.05, y: -2 }}
+                    className="px-4 py-2 rounded-xl bg-slate-800/60 border border-slate-700 text-white font-medium backdrop-blur-sm hover:bg-slate-700/60 transition-colors"
                   >
                     {tech}
-                  </motion.span>
+                  </span>
                 ))}
               </div>
             </div>
 
             {/* Actions */}
             <div className="flex gap-4">
-              <motion.a
+              <a
                 href={project.link}
                 target="_blank"
                 rel="noopener noreferrer"
-                className={`flex-1 flex items-center justify-center gap-2 bg-gradient-to-r  text-white px-6 py-3 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all duration-300`}
-                whileHover={{ scale: 1.02, y: -2 }}
-                whileTap={{ scale: 0.98 }}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.6 }}
+                className="flex-1 flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all duration-300"
               >
                 <Github className="w-5 h-5" />
                 Voir le code source
-              </motion.a>
+              </a>
 
-              <motion.button
+              <button
                 onClick={onClose}
-                className="px-6 py-3 bg-white/10 hover:bg-white/20 text-white rounded-xl font-semibold backdrop-blur-sm border border-white/20 transition-all duration-300"
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.7 }}
+                className="px-6 py-3 bg-slate-800 hover:bg-slate-700 text-white rounded-xl font-semibold border border-slate-700 transition-all duration-300"
               >
                 Fermer
-              </motion.button>
+              </button>
             </div>
-          </motion.div>
+          </div>
         </div>
-      </motion.div>
-    </motion.div>
+      </div>
+    </div>
   );
 };
 
@@ -429,25 +378,42 @@ const Projects = () => {
     <section className="relative min-h-screen overflow-hidden py-20">
       <FloatingParticles />
       
+      <style>{`
+        @keyframes fadeInUp {
+          from {
+            opacity: 0;
+            transform: translateY(30px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+        
+        @keyframes fadeIn {
+          from { opacity: 0; }
+          to { opacity: 1; }
+        }
+        
+        @keyframes scaleIn {
+          from {
+            opacity: 0;
+            transform: scale(0.9) translateY(20px);
+          }
+          to {
+            opacity: 1;
+            transform: scale(1) translateY(0);
+          }
+        }
+      `}</style>
+      
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
-        <motion.div
-          className="text-center mb-20"
-          initial={{ opacity: 0, y: -30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.8 }}
-        >
-          <motion.div
-            className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gradient-to-r from-blue-500/20 to-purple-500/20 border border-blue-400/30 backdrop-blur-sm mb-6"
-            initial={{ scale: 0 }}
-            whileInView={{ scale: 1 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.2, type: "spring", stiffness: 200 }}
-          >
+        <div className="text-center mb-20">
+          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-slate-800/60 border border-slate-700 backdrop-blur-sm mb-6">
             <Code2 className="w-4 h-4 text-blue-400" />
             <span className="text-sm font-medium text-blue-300">Portfolio</span>
-          </motion.div>
+          </div>
 
           <h1 className="text-5xl md:text-7xl font-black mb-6">
             <span className="bg-gradient-to-r from-white via-blue-100 to-purple-200 bg-clip-text text-transparent">
@@ -459,14 +425,8 @@ const Projects = () => {
             Découvrez une sélection de mes réalisations récentes alliant créativité, performance et innovation
           </p>
 
-          <motion.div 
-            className="w-32 h-1.5 bg-gradient-to-r from-blue-400 via-purple-500 to-pink-500 mx-auto rounded-full mt-8"
-            initial={{ width: 0 }}
-            whileInView={{ width: 128 }}
-            viewport={{ once: true }}
-            transition={{ duration: 1, delay: 0.5 }}
-          />
-        </motion.div>
+          <div className="w-32 h-1.5 bg-gradient-to-r from-blue-400 via-purple-500 to-pink-500 mx-auto rounded-full mt-8"></div>
+        </div>
 
         {/* Projects Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-8 mb-20">
@@ -479,19 +439,15 @@ const Projects = () => {
             />
           ))}
         </div>
-
-
       </div>
 
       {/* Modal */}
-      <AnimatePresence>
-        {selectedProject && (
-          <ProjectModal
-            project={selectedProject}
-            onClose={() => setSelectedProject(null)}
-          />
-        )}
-      </AnimatePresence>
+      {selectedProject && (
+        <ProjectModal
+          project={selectedProject}
+          onClose={() => setSelectedProject(null)}
+        />
+      )}
     </section>
   );
 };
