@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Element } from 'react-scroll';
 import NavBar from './components/navBar';
 import Home from './components/home';
@@ -6,40 +6,56 @@ import About from './components/About';
 import Projects from './components/Projects';
 import Skills from './components/Skills';
 import Contact from './components/contact';
+import Background from './components/Background';
 
 function App() {
+  const [theme, setTheme] = useState(localStorage.getItem('theme') || 'catppuccin-latte');
+
+  useEffect(() => {
+    document.documentElement.setAttribute('data-theme', theme);
+    localStorage.setItem('theme', theme);
+  }, [theme]);
+
+  const toggleTheme = () => {
+    setTheme(prev => {
+      if (prev === 'catppuccin-latte') return 'catppuccin-mocha';
+      if (prev === 'catppuccin-mocha') return 'dracula';
+      return 'catppuccin-latte';
+    });
+  };
+
   return (
-    <div className="bg-gray-900 scroll-smooth">
-      <NavBar />
-      
-      {/* Ajout d'un padding-top pour compenser la navbar fixe */}
-      <div className="pt-16">
-        <Element name="home" className="border-b border-gray-700/50">
+    <div className="bg-theme-crust min-h-screen text-theme-text transition-colors duration-500">
+      <Background theme={theme} />
+      <NavBar theme={theme} toggleTheme={toggleTheme} />
+
+      <div className="relative z-10">
+        <Element name="home">
           <section id="home">
             <Home />
           </section>
         </Element>
 
-        <Element name="about" className="border-b border-gray-700/50">
+        <Element name="about">
           <section id="about">
             <About />
           </section>
         </Element>
 
-        <Element name="projects" className="border-b border-gray-700/50">
-          <section id="projects">
+        <Element name="projects">
+          <section id="projects" className="bg-theme-base/30">
             <Projects />
           </section>
         </Element>
 
-        <Element name="skills" className="border-b border-gray-700/50">
+        <Element name="skills">
           <section id="skills">
             <Skills />
           </section>
         </Element>
 
         <Element name="contact">
-          <section id="contact">
+          <section id="contact" className="bg-theme-base/30">
             <Contact />
           </section>
         </Element>
