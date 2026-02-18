@@ -1,135 +1,7 @@
-import React, { useRef, useEffect } from "react";
+import React from "react";
 import emailjs from "emailjs-com";
-import { Mail, Phone, MapPin, Send } from 'lucide-react';
-
-const FloatingParticles = () => {
-  const canvasRef = useRef(null);
-  const particlesRef = useRef([]);
-  const mouseRef = useRef({ x: 0, y: 0 });
-
-  useEffect(() => {
-    const canvas = canvasRef.current;
-    const ctx = canvas.getContext('2d');
-    
-    const resizeCanvas = () => {
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
-    };
-    
-    resizeCanvas();
-    window.addEventListener('resize', resizeCanvas);
-
-    const createParticles = () => {
-      particlesRef.current = [];
-      for (let i = 0; i < 80; i++) {
-        particlesRef.current.push({
-          x: Math.random() * canvas.width,
-          y: Math.random() * canvas.height,
-          z: Math.random() * 1000,
-          vx: (Math.random() - 0.5) * 0.2,
-          vy: (Math.random() - 0.5) * 0.2,
-          vz: Math.random() * 1 + 0.3,
-          size: Math.random() * 1.5 + 0.5,
-          opacity: Math.random() * 0.5 + 0.3,
-          color: `hsl(${Math.random() * 60 + 200}, 70%, ${Math.random() * 30 + 40}%)`,
-          pulse: Math.random() * Math.PI * 2
-        });
-      }
-    };
-
-    createParticles();
-
-    const handleMouseMove = (e) => {
-      mouseRef.current.x = e.clientX;
-      mouseRef.current.y = e.clientY;
-    };
-    
-    window.addEventListener('mousemove', handleMouseMove);
-
-    let animationFrame = 0;
-    const animate = () => {
-      animationFrame += 0.015;
-      ctx.fillStyle = 'rgba(17, 24, 39, 0.06)';
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-      particlesRef.current.forEach((particle, index) => {
-        particle.x += particle.vx;
-        particle.y += particle.vy;
-        particle.z -= particle.vz;
-        particle.pulse += 0.015;
-
-        const scale = 1000 / (1000 + particle.z);
-        const x2d = particle.x * scale + canvas.width / 2;
-        const y2d = particle.y * scale + canvas.height / 2;
-
-        const dx = mouseRef.current.x - x2d;
-        const dy = mouseRef.current.y - y2d;
-        const distance = Math.sqrt(dx * dx + dy * dy);
-        
-        if (distance < 120) {
-          const force = (120 - distance) / 120;
-          particle.vx += dx * 0.000015 * force;
-          particle.vy += dy * 0.000015 * force;
-        }
-
-        if (particle.z <= 0) {
-          particle.z = 1000;
-          particle.x = (Math.random() - 0.5) * 1500;
-          particle.y = (Math.random() - 0.5) * 1500;
-        }
-
-        const pulseSize = particle.size * (1 + Math.sin(particle.pulse) * 0.2);
-
-        ctx.beginPath();
-        ctx.arc(x2d, y2d, pulseSize * scale, 0, Math.PI * 2);
-        
-        const gradient = ctx.createRadialGradient(x2d, y2d, 0, x2d, y2d, pulseSize * scale * 1.5);
-        gradient.addColorStop(0, particle.color.replace(')', `, ${particle.opacity * scale})`).replace('hsl', 'hsla'));
-        gradient.addColorStop(0.6, particle.color.replace(')', `, ${particle.opacity * scale * 0.3})`).replace('hsl', 'hsla'));
-        gradient.addColorStop(1, 'transparent');
-        
-        ctx.fillStyle = gradient;
-        ctx.fill();
-
-        particlesRef.current.slice(index + 1).forEach(otherParticle => {
-          const otherScale = 1000 / (1000 + otherParticle.z);
-          const otherX2d = otherParticle.x * otherScale + canvas.width / 2;
-          const otherY2d = otherParticle.y * otherScale + canvas.height / 2;
-          
-          const distance = Math.sqrt((x2d - otherX2d) ** 2 + (y2d - otherY2d) ** 2);
-          
-          if (distance < 80) {
-            ctx.beginPath();
-            ctx.moveTo(x2d, y2d);
-            ctx.lineTo(otherX2d, otherY2d);
-            ctx.strokeStyle = `rgba(59, 130, 246, ${0.3 * (1 - distance / 80)})`;
-            ctx.lineWidth = 0.5;
-            ctx.stroke();
-          }
-        });
-      });
-
-      requestAnimationFrame(animate);
-    };
-
-    animate();
-
-    return () => {
-      window.removeEventListener('resize', resizeCanvas);
-      window.removeEventListener('mousemove', handleMouseMove);
-    };
-  }, []);
-
-  return (
-    <canvas
-      ref={canvasRef}
-      className="fixed inset-0 pointer-events-none z-0"
-      style={{ 
-        background: 'linear-gradient(135deg, #0f172a 0%, #1e293b 30%, #334155 70%, #475569 100%)',
-      }}
-    />
-  );
-};
+import { Mail, Phone, MapPin, Send, MessageCircle, Sparkles } from 'lucide-react';
+import { motion } from 'framer-motion';
 
 function Contact() {
     const sendEmail = (e) => {
@@ -141,155 +13,146 @@ function Contact() {
 
         emailjs.sendForm(serviceID, templateID, e.target, userID)
             .then((result) => {
-                console.log(result.text);
-                alert("Message envoyé avec succès !");
+                alert("Message envoyé avec succès ! ✨");
             }, (error) => {
-                console.log(error.text);
                 alert("Une erreur s'est produite, veuillez réessayer.");
             });
 
-        e.target.reset(); 
+        e.target.reset();
     };
 
     return (
-        <div className="relative min-h-screen overflow-hidden">
-            <FloatingParticles />
-            
-            <div className="relative z-10 py-12 px-4 sm:px-6 lg:px-8">
-                <div className="max-w-7xl mx-auto">
-                    {/* Header */}
-                    <div className="text-center mb-16">
-                        <h1 className="text-5xl md:text-6xl font-bold bg-gradient-to-r from-white via-blue-100 to-white bg-clip-text text-transparent mb-4">
-                            Contactez-moi
-                        </h1>
-                        <p className="text-xl text-gray-300 max-w-2xl mx-auto">
-                            Vous avez un projet en tête ? N'hésitez pas à me contacter pour en discuter !
-                        </p>
+        <section className="relative min-h-screen py-24 px-4 sm:px-6 lg:px-8">
+            <div className="max-w-7xl mx-auto relative z-10">
+                {/* Header */}
+                <motion.div
+                    className="text-center mb-16"
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                >
+                    <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-theme-peach/10 border border-theme-peach/20 text-theme-peach mb-6 shadow-sm">
+                        <MessageCircle size={16} />
+                        <span className="text-sm font-bold uppercase tracking-widest">Parlons de votre projet</span>
                     </div>
+                    <h2 className="text-5xl md:text-8xl font-black text-theme-text mb-6">
+                        Contactez <span className="text-theme-peach italic">-moi</span>
+                    </h2>
+                    <div className="w-32 h-2 bg-gradient-to-r from-theme-peach to-theme-yellow mx-auto rounded-full"></div>
+                </motion.div>
 
-                    {/* Main Content */}
-                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 mb-16">
-                        {/* Contact Form */}
-                        <div className="backdrop-blur-md bg-white/10 p-8 rounded-2xl shadow-2xl border border-white/20">
-                            <h2 className="text-2xl font-bold text-white mb-6 flex items-center gap-2">
-                                <Send className="text-blue-400" size={24} />
-                                Envoyez-moi un message
-                            </h2>
-                            
-                            <form className="space-y-6" onSubmit={sendEmail}>
-                                <div>
-                                    <label htmlFor="name" className="block text-sm font-medium text-gray-200 mb-2">
-                                        Nom complet
-                                    </label>
-                                    <input
-                                        type="text"
-                                        id="name"
-                                        name="name"
-                                        required
-                                        className="w-full px-4 py-3 bg-white/5 border border-white/20 rounded-lg text-white placeholder-gray-400 focus:ring-2 focus:ring-blue-500 focus:border-transparent backdrop-blur-sm transition-all duration-300"
-                                        placeholder="Votre nom"
-                                    />
-                                </div>
-                                
-                                <div>
-                                    <label htmlFor="email" className="block text-sm font-medium text-gray-200 mb-2">
-                                        Adresse email
-                                    </label>
-                                    <input
-                                        type="email"
-                                        id="email"
-                                        name="email"
-                                        required
-                                        className="w-full px-4 py-3 bg-white/5 border border-white/20 rounded-lg text-white placeholder-gray-400 focus:ring-2 focus:ring-blue-500 focus:border-transparent backdrop-blur-sm transition-all duration-300"
-                                        placeholder="votre@email.com"
-                                    />
-                                </div>
-                                
-                                <div>
-                                    <label htmlFor="message" className="block text-sm font-medium text-gray-200 mb-2">
-                                        Votre message
-                                    </label>
-                                    <textarea
-                                        id="message"
-                                        name="message"
-                                        rows="6"
-                                        required
-                                        className="w-full px-4 py-3 bg-white/5 border border-white/20 rounded-lg text-white placeholder-gray-400 focus:ring-2 focus:ring-blue-500 focus:border-transparent backdrop-blur-sm transition-all duration-300 resize-none"
-                                        placeholder="Décrivez votre projet ou votre message..."
-                                    ></textarea>
-                                </div>
-                                
-                                <button
-                                    type="submit"
-                                    className="w-full bg-gradient-to-r from-blue-600 to-purple-600 text-white py-3 px-6 rounded-lg font-semibold hover:from-blue-700 hover:to-purple-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-transparent transform hover:scale-105 transition-all duration-300 flex items-center justify-center gap-2"
-                                >
-                                    <Send size={20} />
-                                    Envoyer le message
-                                </button>
-                            </form>
-                        </div>
-
-                        {/* Contact Information */}
-                        <div className="space-y-8">
-                            <div className="backdrop-blur-md bg-white/10 p-8 rounded-2xl shadow-2xl border border-white/20">
-                                <h2 className="text-2xl font-bold text-white mb-6">Informations de contact</h2>
-                                
-                                <div className="space-y-6">
-                                    <div className="flex items-center gap-4 p-4 bg-white/5 rounded-lg backdrop-blur-sm hover:bg-white/10 transition-all duration-300">
-                                        <div className="p-3 bg-blue-500/20 rounded-full">
-                                            <Mail className="text-blue-400" size={24} />
-                                        </div>
-                                        <div>
-                                            <p className="text-gray-300 text-sm">Email</p>
-                                            <p className="text-white font-semibold">khadijaamellal51@gmail.com</p>
-                                        </div>
-                                    </div>
-                                    
-                                    <div className="flex items-center gap-4 p-4 bg-white/5 rounded-lg backdrop-blur-sm hover:bg-white/10 transition-all duration-300">
-                                        <div className="p-3 bg-green-500/20 rounded-full">
-                                            <Phone className="text-green-400" size={24} />
-                                        </div>
-                                        <div>
-                                            <p className="text-gray-300 text-sm">Téléphone</p>
-                                            <p className="text-white font-semibold">06 07 08 94 51</p>
-                                        </div>
-                                    </div>
-                                    
-                                    <div className="flex items-center gap-4 p-4 bg-white/5 rounded-lg backdrop-blur-sm hover:bg-white/10 transition-all duration-300">
-                                        <div className="p-3 bg-purple-500/20 rounded-full">
-                                            <MapPin className="text-purple-400" size={24} />
-                                        </div>
-                                        <div>
-                                            <p className="text-gray-300 text-sm">Localisation</p>
-                                            <p className="text-white font-semibold">Casablanca, Maroc</p>
-                                        </div>
-                                    </div>
-                                </div>
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
+                    {/* Contact Form */}
+                    <motion.div
+                        initial={{ opacity: 0, x: -20 }}
+                        whileInView={{ opacity: 1, x: 0 }}
+                        viewport={{ once: true }}
+                        className="glass-card p-8 md:p-12 shadow-2xl"
+                    >
+                        <form className="space-y-8" onSubmit={sendEmail}>
+                            <div className="space-y-3">
+                                <label htmlFor="name" className="text-xs font-black uppercase tracking-widest text-theme-subtext ml-2 flex items-center gap-2">
+                                    <Sparkles size={14} className="text-theme-peach" /> Nom Complet
+                                </label>
+                                <input
+                                    type="text"
+                                    id="name"
+                                    name="name"
+                                    required
+                                    className="w-full px-6 py-4 bg-theme-surface0/50 border border-theme-surface1 rounded-2xl text-theme-text placeholder-theme-surface1 focus:ring-2 focus:ring-theme-peach focus:border-transparent transition-all duration-300 outline-none font-medium"
+                                    placeholder="Khadija Amellal"
+                                />
                             </div>
 
-                            {/* Additional Info */}
-                            <div className="backdrop-blur-md bg-white/10 p-8 rounded-2xl shadow-2xl border border-white/20">
-                                <h3 className="text-xl font-bold text-white mb-4">Disponibilité</h3>
-                                <p className="text-gray-300 leading-relaxed">
-                                    Je suis actuellement disponible pour de nouveaux projets. 
-                                    N'hésitez pas à me contacter pour discuter de vos besoins 
-                                    et voir comment nous pouvons collaborer ensemble.
-                                </p>
-                                
-                                <div className="mt-6 p-4 bg-green-500/10 border border-green-500/20 rounded-lg">
-                                    <div className="flex items-center gap-2">
-                                        <div className="w-3 h-3 bg-green-400 rounded-full animate-pulse"></div>
-                                        <span className="text-green-300 font-medium">Disponible pour de nouveaux projets</span>
+                            <div className="space-y-3">
+                                <label htmlFor="email" className="text-xs font-black uppercase tracking-widest text-theme-subtext ml-2 flex items-center gap-2">
+                                    <Mail size={14} className="text-theme-peach" /> Email
+                                </label>
+                                <input
+                                    type="email"
+                                    id="email"
+                                    name="email"
+                                    required
+                                    className="w-full px-6 py-4 bg-theme-surface0/50 border border-theme-surface1 rounded-2xl text-theme-text placeholder-theme-surface1 focus:ring-2 focus:ring-theme-peach focus:border-transparent transition-all duration-300 outline-none font-medium"
+                                    placeholder="votre@email.com"
+                                />
+                            </div>
+
+                            <div className="space-y-3">
+                                <label htmlFor="message" className="text-xs font-black uppercase tracking-widest text-theme-subtext ml-2 flex items-center gap-2">
+                                    <MessageCircle size={14} className="text-theme-peach" /> Message
+                                </label>
+                                <textarea
+                                    id="message"
+                                    name="message"
+                                    rows="5"
+                                    required
+                                    className="w-full px-6 py-4 bg-theme-surface0/50 border border-theme-surface1 rounded-2xl text-theme-text placeholder-theme-surface1 focus:ring-2 focus:ring-theme-peach focus:border-transparent transition-all duration-300 outline-none resize-none font-medium"
+                                    placeholder="Dites-m'en plus sur votre projet..."
+                                ></textarea>
+                            </div>
+
+                            <button
+                                type="submit"
+                                className="w-full cute-button py-5 text-xl bg-theme-peach text-theme-crust hover:bg-theme-yellow shadow-[0_10px_30px_rgba(var(--accent-peach),0.2)]"
+                                style={{ background: 'var(--accent-peach)' }}
+                            >
+                                <Send size={24} />
+                                Envoyer le message
+                            </button>
+                        </form>
+                    </motion.div>
+
+                    {/* Contact Info */}
+                    <motion.div
+                        initial={{ opacity: 0, x: 20 }}
+                        whileInView={{ opacity: 1, x: 0 }}
+                        viewport={{ once: true }}
+                        className="space-y-8"
+                    >
+                        <div className="glass-card p-8 md:p-10 space-y-10">
+                            <h3 className="text-3xl font-black text-theme-text uppercase tracking-tight">Informations</h3>
+
+                            <div className="space-y-8">
+                                {[
+                                    { icon: Mail, label: 'Email', value: 'khadijaamellal51@gmail.com', color: 'text-theme-blue', bg: 'bg-theme-blue/10' },
+                                    { icon: Phone, label: 'Téléphone', value: '06 07 08 94 51', color: 'text-theme-green', bg: 'bg-theme-green/10' },
+                                    { icon: MapPin, label: 'Localisation', value: 'Casablanca, Maroc', color: 'text-theme-mauve', bg: 'bg-theme-mauve/10' }
+                                ].map((item, i) => (
+                                    <div key={i} className="flex items-center gap-6 group">
+                                        <div className={`p-5 rounded-2xl ${item.bg} ${item.color} transition-all duration-300 group-hover:scale-110 group-hover:rotate-3 shadow-lg`}>
+                                            <item.icon size={28} />
+                                        </div>
+                                        <div>
+                                            <p className="text-xs font-black text-theme-mauve uppercase tracking-[0.2em] mb-1">{item.label}</p>
+                                            <p className="text-xl text-theme-text font-bold leading-tight">{item.value}</p>
+                                        </div>
                                     </div>
-                                </div>
+                                ))}
                             </div>
                         </div>
-                    </div>
 
-                 
+                        <div className="glass-card p-10 relative overflow-hidden group">
+                            <div className="absolute top-0 right-0 p-6 opacity-5 group-hover:rotate-12 group-hover:scale-125 transition-all duration-700">
+                                <Sparkles size={120} className="text-theme-yellow" />
+                            </div>
+                            <h3 className="text-3xl font-black text-theme-text mb-6">Disponibilité</h3>
+                            <p className="text-lg text-theme-subtext leading-relaxed mb-8 font-medium">
+                                Je suis actuellement à la recherche de nouvelles opportunités pour mettre mon expertise à profit.
+                                Discutons ensemble de vos besoins !
+                            </p>
+                            <div className="inline-flex items-center gap-4 px-6 py-3 rounded-2xl bg-theme-green/10 border border-theme-green/20 shadow-inner">
+                                <span className="relative flex h-4 w-4">
+                                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-theme-green opacity-75"></span>
+                                    <span className="relative inline-flex rounded-full h-4 w-4 bg-theme-green"></span>
+                                </span>
+                                <span className="text-theme-green font-black text-sm uppercase tracking-widest">Disponible immédiatement</span>
+                            </div>
+                        </div>
+                    </motion.div>
                 </div>
             </div>
-        </div>
+        </section>
     );
 }
 

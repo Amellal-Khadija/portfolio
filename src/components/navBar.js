@@ -1,105 +1,129 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-scroll';
-import { Menu, X } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Menu, X, Rocket, Moon, Sun, Palette, Coffee } from 'lucide-react';
 
-const NavBar = () => {
+const NavBar = ({ theme, toggleTheme }) => {
+  const [scrolled, setScrolled] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
-  const [activeSection, setActiveSection] = useState('home');
 
-  const navItems = [
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 50);
+    };
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  const navLinks = [
     { name: 'Accueil', to: 'home' },
     { name: 'À propos', to: 'about' },
     { name: 'Projets', to: 'projects' },
     { name: 'Compétences', to: 'skills' },
-    { name: 'Contact', to: 'contact' }
+    { name: 'Contact', to: 'contact' },
   ];
 
-  // Couleur unifiée pour toute la navbar
-  const unifiedGradient = 'from-blue-500 via-purple-500 to-pink-500';
-  const activeGradient = 'from-blue-600 to-purple-600';
+  const getThemeIcon = () => {
+    if (theme === 'catppuccin-latte') return <Coffee size={20} />;
+    if (theme === 'catppuccin-mocha') return <Moon size={20} />;
+    return <Sun size={20} />; // Dracula or default
+  };
+
+  const getThemeName = () => {
+    if (theme === 'catppuccin-latte') return 'Latte';
+    if (theme === 'catppuccin-mocha') return 'Mocha';
+    return 'Dracula';
+  };
 
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 backdrop-blur-md bg-gray-900/80 border-b border-white/10 shadow-2xl">
+    <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${scrolled ? 'bg-theme-crust/80 backdrop-blur-xl border-b border-theme-surface0 py-2 shadow-lg' : 'bg-transparent py-4'
+      }`}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-16">
+        <div className="flex justify-between items-center h-16">
           {/* Logo */}
-          <div className="flex-shrink-0">
-            <Link
-              to="home"
-              smooth={true}
-              duration={500}
-              className="text-2xl font-bold bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent cursor-pointer hover:from-blue-300 hover:to-purple-400 transition-all duration-300"
-            >
-              Khadija
-            </Link>
-          </div>
+          <Link to="home" smooth={true} duration={500} className="flex items-center gap-2 cursor-pointer group">
+            <div className="p-2 bg-gradient-to-br from-theme-mauve to-theme-pink rounded-xl group-hover:rotate-12 transition-transform duration-300">
+              <Rocket size={24} className="text-theme-base" />
+            </div>
+            <span className="text-2xl font-black bg-gradient-to-r from-theme-mauve to-theme-pink bg-clip-text text-transparent">
+              Khadija.
+            </span>
+          </Link>
 
-          {/* Desktop Navigation */}
-          <div className="hidden md:block">
-            <div className="ml-10 flex items-baseline space-x-4">
-              {navItems.map((item) => (
+          {/* Desktop Links */}
+          <div className="hidden md:flex items-center gap-8">
+            <div className="flex items-center gap-6">
+              {navLinks.map((link) => (
                 <Link
-                  key={item.to}
-                  to={item.to}
+                  key={link.to}
+                  to={link.to}
                   smooth={true}
                   duration={500}
-                  spy={true}
-                  exact="true"
-                  offset={-70}
-                  activeClass="active"
-                  onSetActive={() => setActiveSection(item.to)}
-                  className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-300 cursor-pointer transform hover:scale-105 ${
-                    activeSection === item.to
-                      ? `bg-gradient-to-r ${activeGradient} text-white shadow-lg`
-                      : 'text-gray-300 hover:text-white hover:bg-white/10'
-                  }`}
+                  className="text-theme-text font-bold hover:text-theme-mauve cursor-pointer transition-colors relative group"
                 >
-                  {item.name}
+                  {link.name}
+                  <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-theme-mauve transition-all group-hover:w-full"></span>
                 </Link>
               ))}
             </div>
+
+            {/* Theme Toggle Button */}
+            <button
+              onClick={toggleTheme}
+              className="px-4 py-2 rounded-2xl bg-theme-surface0 text-theme-mauve hover:bg-theme-surface1 transition-all duration-300 group shadow-lg flex items-center gap-2 border border-theme-surface1/50"
+              aria-label="Toggle Theme"
+            >
+              <div className="transition-transform group-hover:rotate-12">
+                {getThemeIcon()}
+              </div>
+              <span className="text-xs font-black uppercase tracking-widest">{getThemeName()}</span>
+            </button>
           </div>
 
-          {/* Mobile menu button */}
-          <div className="md:hidden">
+          {/* Mobile Menu Button */}
+          <div className="md:hidden flex items-center gap-4">
+            <button
+              onClick={toggleTheme}
+              className="p-2 rounded-xl bg-theme-surface0 text-theme-mauve"
+            >
+              {getThemeIcon()}
+            </button>
             <button
               onClick={() => setIsOpen(!isOpen)}
-              className="inline-flex items-center justify-center p-2 rounded-md text-gray-300 hover:text-white hover:bg-white/10 transition-all duration-300"
+              className="p-2 text-theme-text hover:text-theme-mauve transition-colors"
             >
-              {isOpen ? <X size={24} /> : <Menu size={24} />}
+              {isOpen ? <X size={28} /> : <Menu size={28} />}
             </button>
           </div>
         </div>
       </div>
 
-      {/* Mobile Navigation */}
-      {isOpen && (
-        <div className="md:hidden backdrop-blur-md bg-gray-900/95 border-t border-white/10">
-          <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
-            {navItems.map((item) => (
-              <Link
-                key={item.to}
-                to={item.to}
-                smooth={true}
-                duration={500}
-                spy={true}
-                exact="true"
-                offset={-70}
-                activeClass="active"
-                onSetActive={() => setActiveSection(item.to)}
-                onClick={() => setIsOpen(false)}
-                className={`block px-4 py-3 rounded-lg text-base font-medium transition-all duration-300 cursor-pointer ${
-                  activeSection === item.to
-                    ? `bg-gradient-to-r ${activeGradient} text-white shadow-lg`
-                    : 'text-gray-300 hover:text-white hover:bg-white/10'
-                }`}
-              >
-                {item.name}
-              </Link>
-            ))}
-          </div>
-        </div>
-      )}
+      {/* Mobile Menu */}
+      <AnimatePresence>
+        {isOpen && (
+          <motion.div
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: 'auto' }}
+            exit={{ opacity: 0, height: 0 }}
+            className="md:hidden bg-theme-crust border-b border-theme-surface0 overflow-hidden"
+          >
+            <div className="px-4 py-6 space-y-4">
+              {navLinks.map((link) => (
+                <Link
+                  key={link.to}
+                  to={link.to}
+                  smooth={true}
+                  duration={500}
+                  onClick={() => setIsOpen(false)}
+                  className="block text-xl font-bold text-theme-text hover:text-theme-mauve transition-colors"
+                >
+                  {link.name}
+                </Link>
+              ))}
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </nav>
   );
 };
