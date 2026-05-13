@@ -222,36 +222,105 @@ const About = () => {
               >
                 <div className="space-y-6 text-gray-200 leading-relaxed">
                   <p className="text-lg">
-                    Je suis <span className="text-blue-400 font-semibold">développeuse web diplômée</span>, 
-                    spécialisée dans la création d'applications modernes et performantes. Passionnée par les 
-                    technologies web, j'ai acquis de solides compétences en <span className="text-cyan-400 font-semibold">HTML, CSS, JavaScript, React.js, Tailwind CSS</span> 
-                    pour le front-end, ainsi qu'en <span className="text-green-400 font-semibold">Node.js, Laravel, MySQL</span> pour le back-end.
+                    Je suis <span className="text-blue-400 font-semibold">Développeuse Fullstack</span> spécialisée en{' '}
+                    <span className="text-purple-400 font-semibold">automatisation intelligente et Intelligence Artificielle</span>.
+                    J'ai une expérience confirmée dans la conception d'applications web modernes avec{' '}
+                    <span className="text-cyan-400 font-semibold">React.js, Next.js, Laravel et Python</span>,
+                    la création de workflows automatisés avec <span className="text-orange-400 font-semibold">n8n</span>,
+                    et l'intégration d'APIs pour transformer les processus métier.
                   </p>
-                  
+
                   <p className="text-lg">
-                    Je suis titulaire d'une <span className="text-purple-400 font-semibold">licence en Science de la Matière Physique option Électronique</span>,
-                    ce qui m'a dotée d'une rigueur scientifique et de capacités d'analyse que j'applique
-                    dans mes projets de développement web.
+                    Titulaire d'un <span className="text-green-400 font-semibold">Diplôme de Technicienne Spécialisée en Développement Fullstack</span> (OFPPT, 2025)
+                    et d'une <span className="text-purple-400 font-semibold">Formation Qualifiante en Intelligence Artificielle</span> (Centre CTPES, 2025–2026),
+                    avec une licence en Sciences Physiques qui m'a dotée d'une rigueur analytique solide.
                   </p>
+
                   <p className="text-lg">
-                    Ma formation en développement web m'a permis de maîtriser l'ensemble de la chaîne de développement, 
-                    de la conception d'interfaces utilisateur intuitives avec <span className="text-blue-400 font-semibold">React et Tailwind</span>, 
-                    jusqu'au développement de serveurs robustes avec <span className="text-orange-400 font-semibold">Laravel et Node.js</span>, 
-                    en passant par la gestion de bases de données <span className="text-indigo-400 font-semibold">MySQL</span>.
+                    J'ai travaillé en entreprise sur des projets variés : plateformes de gestion de formation,
+                    sites web SEO-optimisés, <span className="text-blue-400 font-semibold">systèmes de matching de CV avec IA</span>,
+                    et applications d'automatisation événementielle. Je maîtrise les bases de données
+                    <span className="text-indigo-400 font-semibold"> MySQL, MongoDB, PostgreSQL et Supabase</span>.
                   </p>
-                  
+
                   <p className="text-lg">
-                    Récemment diplômée, j'ai participé à divers projets qui m'ont permis de 
-                    développer une compréhension approfondie des meilleures pratiques en développement full-stack. 
-                    Je suis déterminée à continuer à apprendre et à appliquer mes compétences techniques dans des
-                    <span className="text-cyan-400 font-semibold"> projets innovants</span>.
+                    Certifiée <span className="text-yellow-400 font-semibold">Microsoft Power Automate</span>,{' '}
+                    <span className="text-yellow-400 font-semibold">Microsoft Copilot Studio</span> et{' '}
+                    <span className="text-yellow-400 font-semibold">Azure</span> (2026).
+                    Je suis passionnée par l'innovation et déterminée à créer des{' '}
+                    <span className="text-cyan-400 font-semibold">solutions intelligentes à fort impact</span>.
                   </p>
                 </div>
               </motion.div>
             </div>
           </div>
 
-         
+          {/* Experience Timeline */}
+          <motion.div
+            className="backdrop-blur-md bg-white/10 rounded-3xl shadow-2xl border border-white/20 p-8 md:p-10 mb-12"
+            initial={{ opacity: 0, y: 50 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.9 }}
+          >
+            <h3 className="text-3xl font-bold text-white mb-8 text-center">
+              <span className="bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent">Expériences</span>
+            </h3>
+            <div className="relative space-y-6">
+              <div className="absolute left-4 top-0 bottom-0 w-0.5 bg-gradient-to-b from-blue-500 via-purple-500 to-cyan-500 hidden md:block" />
+              {[
+                {
+                  role: 'Développeuse Fullstack — DS Office',
+                  period: 'Avril 2026 — Présent',
+                  color: 'bg-cyan-500',
+                  tags: ['React.js', 'Express.js', 'MySQL'],
+                  desc: 'Conception et développement du site web officiel de DS Office. Création d\'interfaces modernes et responsives.'
+                },
+                {
+                  role: 'Développeuse Fullstack — Prodig',
+                  period: 'Sept. 2025 — Avril 2026',
+                  color: 'bg-blue-500',
+                  tags: ['React.js', 'Laravel', 'MySQL'],
+                  desc: 'Développement de 2 projets : plateforme de gestion de formation et site web ENJOY Experiences optimisé SEO.'
+                },
+                {
+                  role: 'Développeuse Fullstack — SMART Expos',
+                  period: 'Mars 2025',
+                  color: 'bg-purple-500',
+                  tags: ['React.js', 'Express.js', 'Laravel'],
+                  desc: 'Refonte visuelle du site SMART Expos et création d\'une application de traitement automatique de CV.'
+                },
+                {
+                  role: 'Freelance — Projets IA & Automatisation',
+                  period: '2026 — Présent',
+                  color: 'bg-pink-500',
+                  tags: ['n8n', 'Next.js', 'OCR', 'IA'],
+                  desc: 'Plateforme QCM médecins, système de matching CV avec IA, automatisation d\'inscriptions événementielles.'
+                }
+              ].map((exp, i) => (
+                <motion.div
+                  key={i}
+                  className="relative md:pl-12 flex flex-col gap-2"
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ duration: 0.5, delay: 1 + i * 0.1 }}
+                >
+                  <div className={`absolute left-2.5 top-2 w-3 h-3 ${exp.color} rounded-full shadow-lg hidden md:block ring-2 ring-white/20`} />
+                  <div className="backdrop-blur-sm bg-white/5 rounded-2xl p-5 border border-white/10 hover:border-white/25 transition-all duration-300">
+                    <div className="flex flex-wrap items-start justify-between gap-2 mb-2">
+                      <h4 className="text-white font-semibold text-lg">{exp.role}</h4>
+                      <span className="text-xs text-gray-400 bg-white/10 px-3 py-1 rounded-full whitespace-nowrap">{exp.period}</span>
+                    </div>
+                    <p className="text-gray-300 text-sm mb-3">{exp.desc}</p>
+                    <div className="flex flex-wrap gap-2">
+                      {exp.tags.map((tag, j) => (
+                        <span key={j} className="text-xs px-2 py-1 rounded-full bg-white/10 text-gray-300 border border-white/10">{tag}</span>
+                      ))}
+                    </div>
+                  </div>
+                </motion.div>
+              ))}
+            </div>
+          </motion.div>
 
           {/* Social Links */}
           <motion.div

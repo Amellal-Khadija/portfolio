@@ -1,44 +1,70 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Github, ExternalLink, Code2, Sparkles, ArrowUpRight, X } from 'lucide-react';
-
-// Placeholder images
-const Authentification = 'https://images.unsplash.com/photo-1633356122544-f134324a6cee?w=800&h=600&fit=crop';
-const RecetteApp = 'https://images.unsplash.com/photo-1556910103-1c02745aae4d?w=800&h=600&fit=crop';
-const AutoVision = 'https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?w=800&h=600&fit=crop';
-const CafeSite = 'https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb?w=800&h=600&fit=crop';
+import { Github, Code2, Sparkles, ArrowUpRight, X } from 'lucide-react';
 
 const projects = [
   {
-    title: 'Authentification',
-    category: 'Full Stack',
-    description: 'Application web avec une interface d\'inscription/connexion et une page d\'accueil pour utilisateurs authentifiés, utilisant React.js pour le frontend et MongoDB pour la gestion des données.',
-    image: Authentification,
+    title: 'Plateforme QCM pour Médecins',
+    category: 'Freelance · IA',
+    description: 'Plateforme interactive de QCM dédiée aux médecins pour faciliter la préparation aux examens médicaux. Interface intuitive avec système de scoring, correction automatique et suivi des performances.',
+    image: 'https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=800&h=600&fit=crop',
+    technologies: ['Next.js', 'Express.js', 'MySQL'],
+    link: 'https://github.com/Amellal-Khadija'
+  },
+  {
+    title: 'Système de Matching CV avec IA',
+    category: 'Freelance · Automatisation',
+    description: 'Analyse automatique des CV et scoring des candidats grâce à l\'IA. Intégration OCR pour extraction de données, automatisation complète avec n8n et APIs Google pour le traitement et la mise en correspondance.',
+    image: 'https://images.unsplash.com/photo-1677442136019-21780ecad995?w=800&h=600&fit=crop',
+    technologies: ['n8n', 'OCR', 'Google APIs', 'IA'],
+    link: 'https://github.com/Amellal-Khadija'
+  },
+  {
+    title: 'Automatisation Inscription & Feedback',
+    category: 'Freelance · n8n',
+    description: 'Système automatisé de gestion des inscriptions événementielles et envoi d\'emails. Collecte et analyse de sentiment des feedbacks via IA pour optimiser l\'expérience des participants.',
+    image: 'https://images.unsplash.com/photo-1611532736597-de2d4265fba3?w=800&h=600&fit=crop',
+    technologies: ['n8n', 'IA', 'Email Automation', 'NLP'],
+    link: 'https://github.com/Amellal-Khadija'
+  },
+  {
+    title: 'Application de Traitement de CV',
+    category: 'Stage SMART · Full Stack',
+    description: 'Application d\'analyse et de traitement automatique de CV. Extraction intelligente des données, analyse structurée et présentation claire des profils candidats pour faciliter le recrutement.',
+    image: 'https://images.unsplash.com/photo-1586281380349-632531db7ed4?w=800&h=600&fit=crop',
+    technologies: ['React.js', 'Express.js', 'MySQL'],
+    link: 'https://github.com/Amellal-Khadija'
+  },
+  {
+    title: 'Plateforme de Gestion de Formation',
+    category: 'Stage Prodig · Full Stack',
+    description: 'Système complet de gestion des étudiants, modules et paiements pour un organisme de formation. Développé en environnement professionnel Agile avec des fonctionnalités de suivi et reporting.',
+    image: 'https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=800&h=600&fit=crop',
+    technologies: ['React.js', 'Laravel', 'MySQL'],
+    link: 'https://github.com/Amellal-Khadija'
+  },
+  {
+    title: 'Site Web ENJOY Experiences',
+    category: 'Stage Prodig · Full Stack',
+    description: 'Site web responsive optimisé pour le SEO pour la plateforme ENJOY Experiences. Interface moderne et performante avec navigation fluide et contenu optimisé pour le référencement naturel.',
+    image: 'https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=800&h=600&fit=crop',
+    technologies: ['React.js', 'Laravel', 'MySQL', 'SEO'],
+    link: 'https://github.com/Amellal-Khadija'
+  },
+  {
+    title: 'Authentification Full Stack',
+    category: 'Projet Personnel',
+    description: 'Application web avec interface d\'inscription/connexion sécurisée et page d\'accueil pour utilisateurs authentifiés. Architecture REST avec gestion des sessions et JWT.',
+    image: 'https://images.unsplash.com/photo-1633356122544-f134324a6cee?w=800&h=600&fit=crop',
     technologies: ['React.js', 'Express.js', 'MongoDB', 'Tailwind CSS'],
     link: 'https://github.com/Khadija123-hub/react-mongodb-auth.git'
-  },  
-  {
-    title: 'RecetteApp',
-    category: 'Frontend',
-    description: 'SuityDélice est une application de recettes de cuisine créée avec React et Bootstrap. Elle permet de rechercher, explorer des recettes par catégories et de naviguer facilement grâce à une barre de navigation moderne et fonctionnelle.',
-    image: RecetteApp,
-    technologies: ['React.js', 'React Router', 'Bootstrap', 'EmailJS'],
-    link: 'https://github.com/Khadija123-hub/recettes-react.git'
   },
   {
-    title: "AutoVision",
-    category: 'Full Stack',
-    description: "Une plateforme web pour explorer et gérer des voitures neuves ou d'occasion. Développé avec PHP, MySQLi, HTML, CSS, Bootstrap et JavaScript.",
-    image: AutoVision,
-    technologies: ["PHP", "MySQLi", "HTML", "CSS", "Bootstrap"],
-    link: "https://github.com/Khadija123-hub/AutoCollection-Manager.git"
-  },
-  {
-    title: "Café Site Web",
-    category: 'Full Stack',
-    description: "Un site web moderne pour un café avec présentation du menu, système de commande en ligne, galerie de photos et formulaire de contact. Interface élégante et responsive pour une expérience utilisateur optimale.",
-    image: CafeSite,
-    technologies: ["React.js", "Tailwind CSS", "Laravel", "Responsive Design"],
-    link: "https://github.com/Khadija123-hub/projet_fin_cafe"
+    title: 'AutoVision — Gestion Auto',
+    category: 'Projet Personnel',
+    description: 'Plateforme web pour explorer et gérer des voitures neuves ou d\'occasion. Fonctionnalités de recherche avancée, fiches détaillées et interface responsive.',
+    image: 'https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?w=800&h=600&fit=crop',
+    technologies: ['PHP', 'MySQLi', 'HTML', 'CSS', 'Bootstrap'],
+    link: 'https://github.com/Khadija123-hub/AutoCollection-Manager.git'
   }
 ];
 
@@ -429,7 +455,7 @@ const Projects = () => {
         </div>
 
         {/* Projects Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-8 mb-20">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-20">
           {projects.map((project, index) => (
             <ProjectCard
               key={index}

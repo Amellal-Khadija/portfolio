@@ -1,20 +1,16 @@
 import React, { useRef, useEffect, useState } from "react";
-import { motion, useScroll, useTransform, useSpring } from "framer-motion";
+import { motion, useScroll, useTransform } from "framer-motion";
 import {
   Code,
-  Palette,
   Globe,
   Database,
-  GitBranch,
   Server,
   Wrench,
   Sparkles,
-  Zap,
-  Mail,
-  Kanban,
   Brain,
-  Rocket,
-  MessageCircle
+  Zap,
+  BarChart2,
+  Settings
 } from "lucide-react";
 
 import {
@@ -22,17 +18,25 @@ import {
   SiCss3,
   SiJavascript,
   SiReact,
+  SiNextdotjs,
   SiTailwindcss,
   SiNodedotjs,
   SiLaravel,
+  SiPhp,
+  SiPython,
+  SiExpress,
   SiMysql,
   SiMongodb,
+  SiPostgresql,
+  SiSupabase,
   SiGithub,
-  SiJira,
-  SiVercel
+  SiDocker,
+  SiPostman,
+  SiStreamlit,
+  SiN8N
 } from "react-icons/si";
 
-import { FaRobot, FaMagic } from "react-icons/fa";
+import { FaRobot } from "react-icons/fa";
 
 const FloatingParticles = () => {
   const canvasRef = useRef(null);
@@ -172,8 +176,7 @@ const skillCategories = [
       { name: "CSS3", icon: <SiCss3 className="text-blue-500" />, color: "from-blue-400 to-indigo-500" },
       { name: "JavaScript", icon: <SiJavascript className="text-yellow-400" />, color: "from-yellow-400 to-orange-500" },
       { name: "React.js", icon: <SiReact className="text-cyan-400" />, color: "from-cyan-400 to-blue-500" },
-      { name: "Next.js", icon: <SiReact className="text-white" />, color: "from-gray-700 to-gray-900" },
-      { name: "Vite", icon: <SiReact className="text-purple-400" />, color: "from-purple-400 to-yellow-400" },
+      { name: "Next.js", icon: <SiNextdotjs className="text-white" />, color: "from-gray-600 to-gray-900" },
       { name: "Tailwind CSS", icon: <SiTailwindcss className="text-sky-400" />, color: "from-teal-400 to-cyan-500" }
     ]
   },
@@ -183,45 +186,57 @@ const skillCategories = [
     gradient: "from-green-500 via-emerald-500 to-teal-400",
     bgGlow: "bg-green-500/20",
     skills: [
-      { name: "Node.js", icon: <SiNodedotjs className="text-green-500" />, color: "from-green-400 to-green-600" },
+      { name: "PHP", icon: <SiPhp className="text-indigo-400" />, color: "from-indigo-400 to-purple-500" },
       { name: "Laravel", icon: <SiLaravel className="text-red-500" />, color: "from-red-400 to-orange-500" },
-      { name: "MySQL", icon: <SiMysql className="text-blue-600" />, color: "from-blue-500 to-indigo-600" },
-      { name: "MongoDB", icon: <SiMongodb className="text-green-400" />, color: "from-green-400 to-teal-500" }
+      { name: "Express.js", icon: <SiExpress className="text-gray-300" />, color: "from-gray-400 to-gray-600" },
+      { name: "Python", icon: <SiPython className="text-yellow-400" />, color: "from-yellow-400 to-blue-500" },
+      { name: "Node.js", icon: <SiNodedotjs className="text-green-500" />, color: "from-green-400 to-green-600" }
     ]
   },
   {
-    title: "IA & Productivité",
+    title: "Bases de données",
+    icon: Database,
+    gradient: "from-indigo-500 via-blue-500 to-cyan-400",
+    bgGlow: "bg-indigo-500/20",
+    skills: [
+      { name: "MySQL", icon: <SiMysql className="text-blue-600" />, color: "from-blue-500 to-indigo-600" },
+      { name: "MongoDB", icon: <SiMongodb className="text-green-400" />, color: "from-green-400 to-teal-500" },
+      { name: "PostgreSQL", icon: <SiPostgresql className="text-sky-400" />, color: "from-sky-400 to-blue-600" },
+      { name: "Supabase", icon: <SiSupabase className="text-emerald-400" />, color: "from-emerald-400 to-green-600" }
+    ]
+  },
+  {
+    title: "Automatisation IA",
     icon: Brain,
     gradient: "from-purple-500 via-pink-500 to-rose-400",
     bgGlow: "bg-purple-500/20",
     skills: [
-      { name: "Cursor", icon: <MessageCircle className="text-green-400" />, color: "from-green-400 to-emerald-500" },
-      { name: "v0.dev", icon: <SiVercel className="text-white" />, color: "from-gray-700 to-black" },
+      { name: "n8n", icon: <SiN8N className="text-pink-400" />, color: "from-pink-400 to-purple-500" },
       { name: "GitHub Copilot", icon: <FaRobot className="text-blue-400" />, color: "from-blue-400 to-purple-500" },
-      { name: "VS Code + IA", icon: <Code className="text-blue-300" />, color: "from-blue-300 to-cyan-400" }
+      { name: "Power Automate", icon: <Zap className="text-blue-300" />, color: "from-blue-300 to-indigo-500" },
+      { name: "Copilot Studio", icon: <Brain className="text-purple-400" />, color: "from-purple-400 to-pink-500" }
     ]
   },
   {
-    title: "Prototypage & Communication",
-    icon: Rocket,
+    title: "Data & Visualisation",
+    icon: BarChart2,
     gradient: "from-orange-500 via-red-500 to-pink-400",
     bgGlow: "bg-orange-500/20",
     skills: [
-     
-      { name: "EmailJS", icon: <Mail className="text-yellow-400" />, color: "from-yellow-400 to-orange-500" },
-      { name: "Jira", icon: <SiJira className="text-blue-400" />, color: "from-blue-400 to-cyan-500" }
+      { name: "Streamlit", icon: <SiStreamlit className="text-red-400" />, color: "from-red-400 to-orange-500" }
     ]
   },
   {
-    title: "Outils & Versioning",
+    title: "Outils & DevOps",
     icon: Wrench,
     gradient: "from-gray-500 via-gray-600 to-gray-700",
     bgGlow: "bg-gray-500/20",
     skills: [
       { name: "Git & GitHub", icon: <SiGithub className="text-gray-200" />, color: "from-gray-400 to-gray-600" },
-     
-      { name: "Postman", icon: <SiReact className="text-orange-500" />, color: "from-orange-400 to-red-500" },
-     
+      { name: "Docker", icon: <SiDocker className="text-blue-400" />, color: "from-blue-400 to-cyan-500" },
+      { name: "Postman", icon: <SiPostman className="text-orange-500" />, color: "from-orange-400 to-red-500" },
+      { name: "VS Code", icon: <Code className="text-blue-300" />, color: "from-blue-300 to-cyan-400" },
+      { name: "Azure", icon: <Settings className="text-blue-500" />, color: "from-blue-500 to-indigo-600" }
     ]
   }
 ];

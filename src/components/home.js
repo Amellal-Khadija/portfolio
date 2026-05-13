@@ -178,8 +178,9 @@ const Home = () => {
   
   const dynamicTexts = [
     "Développeuse Fullstack",
-    "Créatrice d'expériences web",
-    "Passionnée par l'innovation",
+    "Experte en Automatisation IA",
+    "Spécialiste n8n & Intelligence Artificielle",
+    "Créatrice de Solutions Innovantes",
   ];
 
   useEffect(() => {
@@ -253,18 +254,22 @@ const Home = () => {
     
         <div className={`max-w-4xl mx-auto mb-8 transform transition-all duration-1000 delay-600 ${isVisible ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'}`}>
           <p className="text-lg md:text-xl text-gray-300 leading-relaxed mb-4">
-            Passionnée par la création de solutions innovantes et performantes,
-            j'aime travailler avec des technologies modernes telles que{' '}
-            <span className="text-blue-400 font-semibold bg-blue-400/10 px-2 py-1 rounded">React</span>,{' '}
-            <span className="text-green-400 font-semibold bg-green-400/10 px-2 py-1 rounded">Node.js</span>,{' '}
-            <span className="text-purple-400 font-semibold bg-purple-400/10 px-2 py-1 rounded">PHP</span> et{' '}
-            <span className="text-yellow-400 font-semibold bg-yellow-400/10 px-2 py-1 rounded">Laravel</span>
-            {' '}pour concevoir des applications web dynamiques et interactives.
+            Développeuse Fullstack spécialisée en{' '}
+            <span className="text-purple-400 font-semibold bg-purple-400/10 px-2 py-1 rounded">automatisation intelligente</span>{' '}
+            et{' '}
+            <span className="text-cyan-400 font-semibold bg-cyan-400/10 px-2 py-1 rounded">Intelligence Artificielle</span>.
+            Je conçois des applications web modernes avec{' '}
+            <span className="text-blue-400 font-semibold bg-blue-400/10 px-2 py-1 rounded">React.js</span>,{' '}
+            <span className="text-green-400 font-semibold bg-green-400/10 px-2 py-1 rounded">Next.js</span>,{' '}
+            <span className="text-red-400 font-semibold bg-red-400/10 px-2 py-1 rounded">Laravel</span> et{' '}
+            <span className="text-yellow-400 font-semibold bg-yellow-400/10 px-2 py-1 rounded">Python</span>,
+            et je crée des workflows automatisés avec{' '}
+            <span className="text-orange-400 font-semibold bg-orange-400/10 px-2 py-1 rounded">n8n</span>.
           </p>
-          
+
           <p className="text-lg text-gray-400 leading-relaxed">
-            À travers ce portfolio, vous découvrirez mes projets, ma philosophie de travail et les compétences 
-            que j'ai développées au cours de mes études et de mes expériences professionnelles.
+            Expérience confirmée en intégration d'APIs, traitement automatique de documents,
+            et utilisation de solutions IA pour transformer et optimiser les processus métier.
           </p>
         </div>
 
