@@ -46,9 +46,7 @@ const FloatingParticles = () => {
     
     window.addEventListener('mousemove', handleMouseMove);
 
-    let animationFrame = 0;
     const animate = () => {
-      animationFrame += 0.015;
       ctx.fillStyle = 'rgba(17, 24, 39, 0.06)';
       ctx.fillRect(0, 0, canvas.width, canvas.height);
 

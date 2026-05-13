@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Github, Linkedin, Mail, Download, Code, Database, Palette } from 'lucide-react';
+import { Github, Download, Code, Database, Palette } from 'lucide-react';
 import Img1 from '../images/profile.png';
 import CV from '../images/CV-AMELLAL Khadija.pdf';
 
@@ -50,9 +50,7 @@ const FloatingParticles = () => {
     window.addEventListener('mousemove', handleMouseMove);
 
    
-    let animationFrame = 0;
     const animate = () => {
-      animationFrame += 0.02;
       ctx.fillStyle = 'rgba(17, 24, 39, 0.08)';
       ctx.fillRect(0, 0, canvas.width, canvas.height);
 
@@ -172,24 +170,24 @@ const FloatingIcons = () => {
   );
 };
 
+const dynamicTexts = [
+  "Développeuse Fullstack",
+  "Experte en Automatisation IA",
+  "Spécialiste n8n & Intelligence Artificielle",
+  "Créatrice de Solutions Innovantes",
+];
+
 const Home = () => {
   const [isVisible, setIsVisible] = useState(false);
   const [textIndex, setTextIndex] = useState(0);
-  
-  const dynamicTexts = [
-    "Développeuse Fullstack",
-    "Experte en Automatisation IA",
-    "Spécialiste n8n & Intelligence Artificielle",
-    "Créatrice de Solutions Innovantes",
-  ];
 
   useEffect(() => {
     setIsVisible(true);
-    
+
     const interval = setInterval(() => {
       setTextIndex((prev) => (prev + 1) % dynamicTexts.length);
     }, 3000);
-    
+
     return () => clearInterval(interval);
   }, []);
 

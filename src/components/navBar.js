@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-scroll';
 import { Menu, X } from 'lucide-react';
 
@@ -14,8 +14,6 @@ const NavBar = () => {
     { name: 'Contact', to: 'contact' }
   ];
 
-  // Couleur unifiée pour toute la navbar
-  const unifiedGradient = 'from-blue-500 via-purple-500 to-pink-500';
   const activeGradient = 'from-blue-600 to-purple-600';
 
   return (

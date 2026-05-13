@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useState } from 'react';
+import React, { useRef, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import Img1 from '../images/profile.png';
 import { Github, Linkedin, Mail, Code, Database, Server, Globe } from 'lucide-react';
@@ -47,9 +47,7 @@ const FloatingParticles = () => {
     
     window.addEventListener('mousemove', handleMouseMove);
 
-    let animationFrame = 0;
     const animate = () => {
-      animationFrame += 0.018;
       ctx.fillStyle = 'rgba(17, 24, 39, 0.07)';
       ctx.fillRect(0, 0, canvas.width, canvas.height);
 
@@ -161,14 +159,6 @@ const FloatingIcons = () => {
 };
 
 const About = () => {
-  const [isVisible, setIsVisible] = useState(false);
-  
- 
-
-  useEffect(() => {
-    setIsVisible(true);
-  }, []);
-
   return (
     <div className="relative min-h-screen overflow-hidden">
       <FloatingParticles />
