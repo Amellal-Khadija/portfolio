@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Github, Download, ArrowDown } from 'lucide-react';
 import Img1 from '../images/profile.png';
-import CV from '../images/CV AMELLAL Kadija';
+import CV from '../images/CV AMELLAL Kadija.pdf';
 
 const dynamicTexts = [
   "Développeuse Fullstack",
